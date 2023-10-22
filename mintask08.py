@@ -7,18 +7,14 @@ def deprecated(f=None, *, since=None, will_be_removed=None):
 
     @wraps(f)
     def inner(*args, **kwargs):
-        if since and will_be_removed:
-            print(
-                f"Warning: function {inner.__name__} is deprecated since version {since}. It will be removed in version {will_be_removed}")
-        elif since:
-            print(
-                f"Warning: function {inner.__name__} is deprecated since version {since}. It will be removed in future versions")
-        elif will_be_removed:
-            print(
-                f"Warning: function {inner.__name__} is deprecated. It will be removed in version {will_be_removed}")
+        warning = f"Warning: function {inner.__name__} is deprecated"
+        if since:
+            warning += f" since version {since}"
+        if will_be_removed:
+            warning += f". It will be removed in version {will_be_removed}"
         else:
-            print(
-                f"Warning: function {inner.__name__} is deprecated. It will be removed in future versions")
+            warning += f". It will be removed in future versions"
+        print(f"{warning}.")
         rep = f(*args, **kwargs)
         return rep
 
