@@ -4,18 +4,23 @@ class LRUCache:
         self.cache = dict()
 
     def put(self, key, value):
-        if key in self.cache:
-            self.cache[key][1] += 1
-            return
         if len(self.cache) == self.capacity:
-            self.cache.pop(self.__find_min())
-        self.cache[key] = [value, 1]
+            first_key = list(self.cache.keys())[0]
+            self.cache.pop(first_key)
+        self.cache[key] = value
 
     def get(self, key):
         if key in self.cache:
-            self.cache[key][1] += 1
-            return self.cache[key][0]
+            self.put(key, self.cache[key])
+            return self.cache[key]
         return None
 
-    def __find_min(self):
-        return min(self.cache.items(), key=lambda x: x[1][1])[0]
+
+a = LRUCache()
+for i in range(1, 20):
+    a.put(i, i)
+
+a.get(4)
+a.put(100, 100)
+
+print(a.cache)
