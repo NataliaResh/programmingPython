@@ -3,16 +3,12 @@ import numpy as np
 from random import choice
 from time import time
 
-PLOT = True
+PLOT = False
 
 
 def generate_field(size):
     generate_list = [False, True]
-    if NUMPY:
-        new_field = np.random.choice(generate_list, size=(size, size))
-    else:
-        new_field = [[choice(generate_list) for _ in range(size)] for _ in range(size)]
-    return new_field
+    return [[choice(generate_list) for _ in range(size)] for _ in range(size)]
 
 
 def neighbour_count(field, x, y):
@@ -37,34 +33,35 @@ def iter_life(field):
     return new_field
 
 
-def main():
-    n = 512
+def life(field):
+    size = len(field)
     start = time()
-    main_field = generate_field(n)
     if PLOT:
         plt.ion()
         fig, ax = plt.subplots(figsize=(6, 6), sharex="col")
         for _ in range(128):
             if PLOT:
-                ax_x = [i for i in range(n) for j in range(n) if main_field[i][j]]
-                ax_y = [j for i in range(n) for j in range(n) if main_field[i][j]]
+                ax_x = [i for i in range(size) for j in range(size) if field[i][j]]
+                ax_y = [j for i in range(size) for j in range(size) if field[i][j]]
                 ax.clear()
                 ax.scatter(ax_x, ax_y, s=1, marker='s')
                 plt.pause(10 ** -5)
-            main_field = iter_life(main_field)
+            field = iter_life(field)
     else:
         for _ in range(128):
-            main_field = iter_life(main_field)
+            field = iter_life(field)
     end = time()
     if PLOT:
         plt.close()
     return end - start
 
 
+n = 512
+main_field = generate_field(n)
 NUMPY = True
-with_np = main()
+with_np = life(main_field.copy())
 NUMPY = False
-without_np = main()
+without_np = life(main_field.copy())
 print(with_np, without_np)
 plt.ion()
 fig, ax = plt.subplots(figsize=(6, 6), sharex="col")
